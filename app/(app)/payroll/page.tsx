@@ -33,6 +33,16 @@ async function verifyAction(formData: FormData): Promise<void> {
   });
 }
 
+async function payStubAction(formData: FormData): Promise<void> {
+  "use server";
+  const year = fdRequired(formData, "year");
+  await runAction(`/payroll?year=${year}`, async () => {
+    const { generatePayStub } = await import("../../../src/payroll/paystub");
+    const { documentId, mime } = await generatePayStub(getDb(), BigInt(fdRequired(formData, "runId")));
+    return `pay stub vaulted as document #${documentId} (${mime}) — open it under /documents/${documentId}`;
+  });
+}
+
 async function reverseRunAction(formData: FormData): Promise<void> {
   "use server";
   const year = fdRequired(formData, "year");
@@ -163,14 +173,23 @@ export default async function PayrollPage({ searchParams }: { searchParams: Prom
                 </td>
                 <td>
                   {r.status === "posted" && (
-                    <form className="inline" action={reverseRunAction}>
-                      <input type="hidden" name="runId" value={r.id.toString()} />
-                      <input type="hidden" name="year" value={year} />
-                      <input name="reason" size={14} placeholder="reason" required />
-                      <button className="danger" type="submit">
-                        Reverse
-                      </button>
-                    </form>
+                    <>
+                      <form className="inline" action={payStubAction}>
+                        <input type="hidden" name="runId" value={r.id.toString()} />
+                        <input type="hidden" name="year" value={year} />
+                        <button className="secondary" type="submit">
+                          Pay stub
+                        </button>
+                      </form>{" "}
+                      <form className="inline" action={reverseRunAction}>
+                        <input type="hidden" name="runId" value={r.id.toString()} />
+                        <input type="hidden" name="year" value={year} />
+                        <input name="reason" size={14} placeholder="reason" required />
+                        <button className="danger" type="submit">
+                          Reverse
+                        </button>
+                      </form>
+                    </>
                   )}
                 </td>
               </tr>

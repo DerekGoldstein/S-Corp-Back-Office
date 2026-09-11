@@ -54,7 +54,8 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   §705-ordered outside basis with suspended losses (DB-checked equation).
 - **Payroll** — pure table-driven engine for §4.4 steps 1–8 (six wage bases, W-4/IT-2104,
   caps, Additional Medicare), deposit scheduler ($100k next-day, NYS-1 windows), persisted
-  runs posting the §4.1 entry, and 941/940/W-2/NYS-45 line-keyed worksheets.
+  runs posting the §4.1 entry, 941/940/W-2/NYS-45 line-keyed worksheets, and vaulted
+  pay stubs that re-prove the run's net-pay identity before rendering.
 - **Entity workpapers** — 1120-S page 1/Schedule K/L/M-1/M-2 as mapping queries that
   reconcile to the cent; NYC GCT highest-of-four-bases + CT-3-S FDM with accruals;
   Form 7203 stock basis tying to equity via the §1367 identity.
@@ -82,7 +83,7 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   (with the hand-off zip download), time & comp, records, settings (period locks gated
   on reconciliation).
 
-198 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
+207 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
 ported invariant probes and seeded property tests (random balanced entries always accepted;
 every off-by-a-cent mutation, locked-period insert, and history edit rejected by the DB).
 Tax-rate-bearing engines are tested against synthetic verified tables — no real rate is
@@ -92,5 +93,5 @@ invented anywhere; real 2027 values load through the owner-verification gate whe
 
 Plaid sync (production application starts Phase 1) · disposal accounting (§1245 recapture —
 disposals currently stop depreciation and route to the CPA) · Pub 15-T/NYS-50-T 2027 tables
-+ the hand-derived December golden fixture · email-forward vault inbox · pay stubs ·
++ the hand-derived December golden fixture · email-forward vault inbox ·
 CT-3-S/GCT per-year real tables.

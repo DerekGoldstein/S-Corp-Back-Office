@@ -773,3 +773,4 @@ export const depreciationPostings = pgTable("depreciation_postings", {
 
 export type FixedAsset = typeof fixedAssets.$inferSelect;
 export type DepreciationPosting = typeof depreciationPostings.$inferSelect;
+export type PayrollRun = typeof payrollRuns.$inferSelect;
