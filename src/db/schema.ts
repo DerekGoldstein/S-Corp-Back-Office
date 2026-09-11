@@ -477,6 +477,65 @@ export const reimbursementSubmissions = pgTable("reimbursement_submissions", {
 });
 
 // ---------------------------------------------------------------------------
+// K-1 ingestion + outside basis (0008)
+// ---------------------------------------------------------------------------
+export const k1StatusEnum = pgEnum("k1_status", ["in_review", "confirmed", "posted"]);
+export const k1ConfidenceEnum = pgEnum("k1_confidence", ["high", "low"]);
+
+export const k1s = pgTable("k1s", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  investeeId: integer("investee_id")
+    .notNull()
+    .references(() => investees.id),
+  taxYear: smallint("tax_year").notNull(),
+  documentId: bigint("document_id", { mode: "bigint" })
+    .notNull()
+    .references(() => documents.id),
+  status: k1StatusEnum("status").notNull().default("in_review"),
+  extractionModel: text("extraction_model"),
+  extractedAt: timestamp("extracted_at", { withTimezone: true }),
+  confirmedAt: timestamp("confirmed_at", { withTimezone: true }),
+  journalEntryId: bigint("journal_entry_id", { mode: "bigint" }).references(
+    () => journalEntries.id,
+  ),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const k1Fields = pgTable("k1_fields", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  k1Id: bigint("k1_id", { mode: "bigint" })
+    .notNull()
+    .references(() => k1s.id),
+  boxCode: text("box_code").notNull(),
+  label: text("label"),
+  valueCents: cents("value_cents"),
+  valueText: text("value_text"),
+  confidence: k1ConfidenceEnum("confidence").notNull().default("high"),
+  ownerTouched: boolean("owner_touched").notNull().default(false),
+});
+
+export const basisRollforwards = pgTable("basis_rollforwards", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  investeeId: integer("investee_id")
+    .notNull()
+    .references(() => investees.id),
+  taxYear: smallint("tax_year").notNull(),
+  beginningBasis: cents("beginning_basis").notNull(),
+  contributions: cents("contributions").notNull().default(0n),
+  incomeItems: cents("income_items").notNull().default(0n),
+  taxExemptIncome: cents("tax_exempt_income").notNull().default(0n),
+  distributionsApplied: cents("distributions_applied").notNull().default(0n),
+  excessDistributions: cents("excess_distributions").notNull().default(0n),
+  nondeductiblesApplied: cents("nondeductibles_applied").notNull().default(0n),
+  lossDeductionItems: cents("loss_deduction_items").notNull().default(0n),
+  suspendedLosses: cents("suspended_losses").notNull().default(0n),
+  endingBasis: cents("ending_basis").notNull(),
+  reportedCapitalAccount: cents("reported_capital_account"),
+  trace: jsonb("trace").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Tax tables (0007)
 // ---------------------------------------------------------------------------
 export const taxTableVersions = pgTable("tax_table_versions", {

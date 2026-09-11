@@ -1,0 +1,30 @@
+{
+  "$comment": "Schedule K-1 (Form 1065) box → ledger account + basis character (§4.5). Data, not code: box/code layouts are re-verified against each year's instructions (the k1_map tax-table kind can supersede this baseline per year). direction 'income' posts Dr 15xx / Cr account; 'deduction' posts Dr account / Cr 15xx; negatives flip. 'info' boxes never post. Unmapped codes are hard errors that land on the CPA open-items list rather than guessing.",
+  "boxes": [
+    { "box": "1",   "label": "Ordinary business income (loss)",       "account": "4500", "direction": "income",    "basis": "income" },
+    { "box": "2",   "label": "Net rental real estate income (loss)",  "account": "4570", "direction": "income",    "basis": "income" },
+    { "box": "3",   "label": "Other net rental income (loss)",        "account": "4570", "direction": "income",    "basis": "income" },
+    { "box": "5",   "label": "Interest income",                       "account": "4510", "direction": "income",    "basis": "income" },
+    { "box": "6a",  "label": "Ordinary dividends",                    "account": "4520", "direction": "income",    "basis": "income" },
+    { "box": "6b",  "label": "Qualified dividends (portion of 6a)",   "account": null,   "direction": "info",      "basis": "none" },
+    { "box": "7",   "label": "Royalties",                             "account": "4570", "direction": "income",    "basis": "income" },
+    { "box": "8",   "label": "Net short-term capital gain (loss)",    "account": "4540", "direction": "income",    "basis": "income" },
+    { "box": "9a",  "label": "Net long-term capital gain (loss)",     "account": "4550", "direction": "income",    "basis": "income" },
+    { "box": "10",  "label": "Net section 1231 gain (loss)",          "account": "4560", "direction": "income",    "basis": "income" },
+    { "box": "11A", "label": "Other portfolio income",                "account": "4570", "direction": "income",    "basis": "income" },
+    { "box": "12",  "label": "Section 179 deduction",                 "account": "4580", "direction": "deduction", "basis": "loss" },
+    { "box": "13A", "label": "Charitable contributions (cash 60%)",   "account": "4585", "direction": "deduction", "basis": "loss" },
+    { "box": "13B", "label": "Charitable contributions (cash 30%)",   "account": "4585", "direction": "deduction", "basis": "loss" },
+    { "box": "18A", "label": "Tax-exempt interest income",            "account": "4600", "direction": "income",    "basis": "tax_exempt" },
+    { "box": "18B", "label": "Other tax-exempt income",               "account": "4600", "direction": "income",    "basis": "tax_exempt" },
+    { "box": "18C", "label": "Nondeductible expenses",                "account": "4610", "direction": "deduction", "basis": "nondeductible" },
+    { "box": "19A", "label": "Distributions — cash and marketable securities", "account": null, "direction": "distribution", "basis": "distribution" },
+    { "box": "20A", "label": "Investment income (info)",              "account": null,   "direction": "info",      "basis": "none" },
+    { "box": "20B", "label": "Investment expenses (info)",            "account": null,   "direction": "info",      "basis": "none" },
+    { "box": "L.beginning", "label": "Partner capital — beginning (tax basis)", "account": null, "direction": "info", "basis": "none" },
+    { "box": "L.ending",    "label": "Partner capital — ending (tax basis)",    "account": null, "direction": "info", "basis": "none" },
+    { "box": "J.profit_ending", "label": "Profit share % — ending",   "account": null,   "direction": "info",      "basis": "none" },
+    { "box": "N.beginning", "label": "Unrecognized 704(c) — beginning", "account": null, "direction": "info",      "basis": "none" },
+    { "box": "N.ending",    "label": "Unrecognized 704(c) — ending",  "account": null,   "direction": "info",      "basis": "none" }
+  ]
+}
