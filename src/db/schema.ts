@@ -577,6 +577,23 @@ export const corporateRecords = pgTable("corporate_records", {
 });
 
 // ---------------------------------------------------------------------------
+// Workpapers (0011)
+// ---------------------------------------------------------------------------
+export const workpapers = pgTable("workpapers", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  kind: text("kind").notNull(),
+  taxYear: smallint("tax_year").notNull(),
+  quarter: smallint("quarter"),
+  version: integer("version").notNull().default(1),
+  payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+  tieOuts: jsonb("tie_outs").$type<Record<string, unknown> | unknown[] | null>(),
+  status: text("status").notNull().default("draft"),
+  reviewedBy: text("reviewed_by"),
+  reviewedAt: timestamp("reviewed_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Payroll runs (0010)
 // ---------------------------------------------------------------------------
 export const payrollRuns = pgTable("payroll_runs", {

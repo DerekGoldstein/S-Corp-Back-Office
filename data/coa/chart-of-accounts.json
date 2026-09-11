@@ -57,6 +57,6 @@
     { "code": "5140", "name": "Business insurance", "type": "expense", "taxTreatment": "deductible", "m2Col": "aaa", "form1120sLine": "p1.19" },
     { "code": "5150", "name": "Filing fees & registrations", "type": "expense", "taxTreatment": "deductible", "m2Col": "aaa", "form1120sLine": "p1.12" },
     { "code": "5200", "name": "Entity-level state/local taxes (GCT, NYS FDM, PTET)", "type": "expense", "taxTreatment": "deductible", "m2Col": "aaa", "form1120sLine": "p1.12" },
-    { "code": "5900", "name": "Nondeductible expenses", "type": "expense", "taxTreatment": "nondeductible", "m2Col": "aaa", "form1120sLine": "M1.3" }
+    { "code": "5900", "name": "Nondeductible expenses", "type": "expense", "taxTreatment": "nondeductible", "m2Col": "aaa", "form1120sLine": "M1.3", "scheduleKLine": "K.16c" }
   ]
 }
