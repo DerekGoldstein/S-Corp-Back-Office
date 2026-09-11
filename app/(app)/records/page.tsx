@@ -7,6 +7,8 @@ import {
   renderAccountablePlanPolicy,
   standingDocumentGaps,
 } from "../../../src/records/templates";
+import { generateAnnualConsent } from "../../../src/records/annual-consent";
+import { money } from "../../../src/ui/fmt";
 import { storeDocument, linkDocument } from "../../../src/vault/store";
 import { runAction, fd, fdRequired } from "../../../src/ui/action";
 import { Banner } from "../../../src/ui/banner";
@@ -56,6 +58,23 @@ async function generateConsentAction(formData: FormData): Promise<void> {
       ptetNote: fd(formData, "ptetNote") || undefined,
     });
     return `pre-year consent generated as document #${r.documentId} — sign before January 1`;
+  });
+}
+
+async function generateAnnualConsentAction(formData: FormData): Promise<void> {
+  "use server";
+  await runAction("/records", async () => {
+    const r = await generateAnnualConsent(getDb(), {
+      taxYear: Number(fdRequired(formData, "taxYear")),
+      entityName: fdRequired(formData, "entityName"),
+      memberName: fdRequired(formData, "memberName"),
+      signedOn: fdRequired(formData, "signedOn"),
+    });
+    return (
+      `annual consent generated as document #${r.documentId} — wage ${money(r.data.wage)}, ` +
+      `distributions ${money(r.data.distributions)}, employer 401(k) ${money(r.data.employer401k)}, ` +
+      `PTET ${r.data.ptetElected ? "elected" : "not elected"} — sign and mark signed`
+    );
   });
 }
 
@@ -237,6 +256,34 @@ export default async function RecordsPage({ searchParams }: { searchParams: Prom
           </label>
           <button type="submit">Generate policy</button>
         </form>
+      </div>
+
+      <h2>Generate: annual consent (from ledger data)</h2>
+      <div className="panel">
+        <form className="inline" action={generateAnnualConsentAction}>
+          <label className="field">
+            entity name
+            <input name="entityName" required size={22} />
+          </label>
+          <label className="field">
+            member name
+            <input name="memberName" required size={18} />
+          </label>
+          <label className="field">
+            tax year
+            <input name="taxYear" size={5} defaultValue={String(year)} />
+          </label>
+          <label className="field">
+            signed on
+            <input type="date" name="signedOn" defaultValue={todayISO()} required />
+          </label>
+          <button type="submit">Generate annual consent</button>
+        </form>
+        <p className="muted small">
+          Pulls the year's wage (frozen methodology), distributions from 3200, the employer
+          401(k), the plan in force, and the PTET decision — refuses if the comp computation or
+          the accountable plan is missing.
+        </p>
       </div>
 
       <h2>Generate: pre-year consent</h2>

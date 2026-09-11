@@ -49,17 +49,36 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   `m2_col`, distributions closed, periods locked; reversible reopen.
 - **Tax-table registry** — per-year JSON versions, one-way owner verification that
   refuses placeholders; consumers fail loudly on unverified or silently-changed tables.
+- **K-1 module** — per-field extraction confidence gating confirmation, Anthropic-API
+  PDF extraction (model in config), character-preserving posting, box-19 reconciliation,
+  §705-ordered outside basis with suspended losses (DB-checked equation).
+- **Payroll** — pure table-driven engine for §4.4 steps 1–8 (six wage bases, W-4/IT-2104,
+  caps, Additional Medicare), deposit scheduler ($100k next-day, NYS-1 windows), persisted
+  runs posting the §4.1 entry, and 941/940/W-2/NYS-45 line-keyed worksheets.
+- **Entity workpapers** — 1120-S page 1/Schedule K/L/M-1/M-2 as mapping queries that
+  reconcile to the cent; NYC GCT highest-of-four-bases + CT-3-S FDM with accruals;
+  Form 7203 stock basis tying to equity via the §1367 identity.
+- **Owner projection** — safe-harbor targets and the December over-withholding
+  recommendation with residual-to-1040-ES split, assumptions declared on every result.
+- **Compliance calendar** — data-driven rules, verified-holiday rollover, filing
+  confirmations completing items.
+- **CPA review package** — a tie-out runner for everything above, versioned packages
+  with a vaulted cover memo, guardrail-8 finalization, TB export in the CPA's
+  tax-software codes.
 - **UI** — session-authenticated (scrypt + HMAC cookie) server-rendered screens:
-  dashboard, queue, import, journal, reports, reconciliation, rules, time & comp,
-  records, settings (period locks gated on reconciliation).
+  dashboard, queue, import, journal, reports, reconciliation, rules, K-1 review,
+  payroll/table verification, calendar, year-end & package, time & comp, records,
+  settings (period locks gated on reconciliation).
 
-103 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
+174 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
 ported invariant probes and seeded property tests (random balanced entries always accepted;
 every off-by-a-cent mutation, locked-period insert, and history edit rejected by the DB).
+Tax-rate-bearing engines are tested against synthetic verified tables — no real rate is
+invented anywhere; real 2027 values load through the owner-verification gate when published.
 
 ## Still ahead (per brief §7)
 
-Plaid sync · K-1 PDF extraction via the Anthropic API + review screen · payroll engine with
-2027 verified tables, golden tests, deposit scheduling, and form worksheets · owner-level
-projection · entity workpapers (1120-S/CT-3-S/GCT) · compliance calendar · CPA review
-package with tie-outs · email-forward vault inbox.
+Plaid sync (production application starts Phase 1) · fixed-asset register + Form 4562 with
+per-year MACRS tables · Pub 15-T/NYS-50-T 2027 tables + the hand-derived December golden
+fixture · email-forward vault inbox · pay stubs · CT-3-S/GCT per-year real tables · vault
+year-export zip.
