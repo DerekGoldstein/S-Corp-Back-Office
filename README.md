@@ -84,9 +84,12 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   (with the hand-off zip download), time & comp, records, settings (period locks gated
   on reconciliation).
 
-207 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
-ported invariant probes and seeded property tests (random balanced entries always accepted;
-every off-by-a-cent mutation, locked-period insert, and history edit rejected by the DB).
+208 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
+ported invariant probes, seeded property tests (random balanced entries always accepted;
+every off-by-a-cent mutation, locked-period insert, and history edit rejected by the DB), and
+a full-year end-to-end test that drives 2027 through the public APIs — imports to
+classifications to payroll to depreciation to close to an all-green-but-one review package
+to the export zip.
 Tax-rate-bearing engines are tested against synthetic verified tables — no real rate is
 invented anywhere; real 2027 values load through the owner-verification gate when published.
 

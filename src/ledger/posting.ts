@@ -95,8 +95,8 @@ const TARGET_RULES: ReadonlyArray<{
   },
   {
     match: (c) => c === "5000" || c === "5010" || c === "5020",
-    allowed: ["payroll", "manual"],
-    why: "compensation and employer payroll costs post from payroll runs",
+    allowed: ["payroll", "close", "manual"],
+    why: "compensation and employer payroll costs ORIGINATE only from payroll runs (close may roll them up, never create them)",
   },
 ];
 

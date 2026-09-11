@@ -70,13 +70,28 @@ export async function runTieOuts(db: Dbx, taxYear: number): Promise<TieOut[]> {
     .select()
     .from(payrollRuns)
     .where(and(eq(payrollRuns.taxYear, taxYear), eq(payrollRuns.status, "posted")));
+  // Excludes the year-end equity-roll entries (and their reversals) exactly
+  // like the 1120-S activity queries — otherwise a CLOSED year reads zero
+  // comp and this tie-out goes red for the wrong reason.
   const ledger5000 = await centsQuery(
     db,
-    dsql`SELECT (COALESCE(sum(l.debit),0)-COALESCE(sum(l.credit),0))::bigint AS v
+    dsql`WITH roll_entries AS (
+           SELECT DISTINCT e.id FROM journal_entries e
+           JOIN journal_lines l ON l.entry_id = e.id
+           JOIN accounts a ON a.id = l.account_id
+           WHERE e.source_module = 'close' AND a.code IN ('3900','3100','3110')
+         ), excluded AS (
+           SELECT id FROM roll_entries
+           UNION
+           SELECT e.id FROM journal_entries e
+           WHERE e.reverses_entry_id IN (SELECT id FROM roll_entries)
+         )
+         SELECT (COALESCE(sum(l.debit),0)-COALESCE(sum(l.credit),0))::bigint AS v
          FROM journal_lines l JOIN accounts a ON a.id=l.account_id
          JOIN journal_entries e ON e.id=l.entry_id
          WHERE a.code IN ('5000','5030')
-           AND e.entry_date BETWEEN ${`${taxYear}-01-01`} AND ${`${taxYear}-12-31`}`,
+           AND e.entry_date BETWEEN ${`${taxYear}-01-01`} AND ${`${taxYear}-12-31`}
+           AND e.id NOT IN (SELECT id FROM excluded)`,
   );
   if (runs.length === 0) {
     add(
