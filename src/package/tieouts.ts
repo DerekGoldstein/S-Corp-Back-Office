@@ -25,6 +25,7 @@ import { formatCents } from "../lib/cents";
 import { isReconciledThrough } from "../bank/reconcile";
 import { box19Reconciliation } from "../k1/k1";
 import { buildF1120s } from "../workpapers/f1120s";
+import { buildF4562 } from "../workpapers/f4562";
 import { storeDocument, linkDocument } from "../vault/store";
 
 export class PackageError extends Error {}
@@ -218,7 +219,33 @@ export async function runTieOuts(db: Dbx, taxYear: number): Promise<TieOut[]> {
       (runs.length === 0 ? " (no payroll yet)" : ""),
   );
 
-  // 10. all twelve periods locked
+  // 10. fixed assets: 4562 ties to the ledger; a 1600 balance with an empty
+  //     register means a purchase was classified but never registered
+  const assetCount = await db.execute<{ n: number }>(
+    dsql`SELECT count(*)::int AS n FROM fixed_assets`,
+  );
+  if ((assetCount.rows[0]?.n ?? 0) > 0) {
+    const f4562 = await buildF4562(db, taxYear);
+    for (const t of f4562.tieOuts) {
+      add(`f4562_${t.name.slice(0, 24).replaceAll(/\W+/g, "_")}`, t.name, t.pass, t.detail);
+    }
+  } else {
+    const bal1600 = await centsQuery(
+      db,
+      dsql`SELECT (COALESCE(sum(l.debit),0)-COALESCE(sum(l.credit),0))::bigint AS v
+           FROM journal_lines l JOIN accounts a ON a.id=l.account_id WHERE a.code='1600'`,
+    );
+    add(
+      "fixed_assets_registered",
+      "Fixed assets (1600) all have register rows",
+      bal1600 === 0n,
+      bal1600 === 0n
+        ? "no fixed assets"
+        : `1600 carries ${formatCents(bal1600)} with an EMPTY register — add the asset(s) so depreciation runs`,
+    );
+  }
+
+  // 11. all twelve periods locked
   const locked = await db
     .select()
     .from(periods)

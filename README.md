@@ -71,15 +71,17 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   recommendation with residual-to-1040-ES split, assumptions declared on every result.
 - **Compliance calendar** — data-driven rules, verified-holiday rollover, filing
   confirmations completing items.
-- **CPA review package** — a tie-out runner for everything above, versioned packages
-  with a vaulted cover memo, guardrail-8 finalization, TB export in the CPA's
-  tax-software codes.
+- **CPA review package** — a tie-out runner for everything above (fixed-asset 4562
+  checks included), versioned packages with a vaulted cover memo, guardrail-8
+  finalization, TB export in the CPA's tax-software codes, and a per-year hand-off
+  zip (dependency-free store-mode writer) with the latest workpapers and every
+  integrity-checked vault document belonging to the year.
 - **UI** — session-authenticated (scrypt + HMAC cookie) server-rendered screens:
   dashboard, queue, import, journal, reports, reconciliation, rules, K-1 review,
   payroll/table verification, calendar, year-end & package, time & comp, records,
   settings (period locks gated on reconciliation).
 
-195 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
+198 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
 ported invariant probes and seeded property tests (random balanced entries always accepted;
 every off-by-a-cent mutation, locked-period insert, and history edit rejected by the DB).
 Tax-rate-bearing engines are tested against synthetic verified tables — no real rate is

@@ -212,6 +212,10 @@ export default async function YearEndPage({ searchParams }: { searchParams: Prom
             <button type="submit">Run all tie-outs &amp; build package</button>
           </p>
         </form>
+        <p className="muted small">
+          <a href={`/export/${year}`}>Download the {year} hand-off zip</a> — latest workpapers +
+          every vault document tagged {year} or linked to a {year} entry, integrity-checked.
+        </p>
       </div>
       {pkgs.length > 0 && (
         <table>
