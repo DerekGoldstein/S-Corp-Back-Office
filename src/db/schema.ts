@@ -733,3 +733,43 @@ export type TaskType = typeof taskTypes.$inferSelect;
 export type TimeEntry = typeof timeEntries.$inferSelect;
 export type RateSource = typeof rateSources.$inferSelect;
 export type CompMethodology = typeof compMethodologies.$inferSelect;
+
+// ---------------------------------------------------------------------------
+// Fixed assets & depreciation subledger (0014)
+// ---------------------------------------------------------------------------
+export const fixedAssets = pgTable("fixed_assets", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  description: text("description").notNull(),
+  placedInService: date("placed_in_service", { mode: "string" }).notNull(),
+  cost: cents("cost").notNull(),
+  businessUsePct: text("business_use_pct").notNull().default("100%"),
+  method: text("method").notNull(),
+  recoveryYears: smallint("recovery_years").notNull(),
+  section179: cents("section_179").notNull().default(0n),
+  takeBonus: boolean("take_bonus").notNull().default(false),
+  bonusApplied: cents("bonus_applied").notNull().default(0n),
+  convention: text("convention"),
+  documentId: bigint("document_id", { mode: "bigint" })
+    .notNull()
+    .references(() => documents.id),
+  disposedOn: date("disposed_on", { mode: "string" }),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const depreciationPostings = pgTable("depreciation_postings", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  assetId: bigint("asset_id", { mode: "bigint" })
+    .notNull()
+    .references(() => fixedAssets.id),
+  taxYear: smallint("tax_year").notNull(),
+  amount: cents("amount").notNull(),
+  detail: jsonb("detail").$type<Record<string, unknown>>().notNull(),
+  journalEntryId: bigint("journal_entry_id", { mode: "bigint" })
+    .notNull()
+    .references(() => journalEntries.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export type FixedAsset = typeof fixedAssets.$inferSelect;
+export type DepreciationPosting = typeof depreciationPostings.$inferSelect;

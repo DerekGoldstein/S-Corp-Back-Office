@@ -58,6 +58,15 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
 - **Entity workpapers** — 1120-S page 1/Schedule K/L/M-1/M-2 as mapping queries that
   reconcile to the cent; NYC GCT highest-of-four-bases + CT-3-S FDM with accruals;
   Form 7203 stock basis tying to equity via the §1367 identity.
+- **Fixed assets** — S-corp-era register (invoices required), MACRS computed as pure
+  arithmetic (200/150DB with SL switch, half-year + mid-quarter with the 40% cohort
+  test, exact cents that always sum to basis — no percentage table is stored anywhere),
+  §179/bonus elections gated by the verified per-year `depreciation` table, one annual
+  Dr 5050 / Cr 1610 posting with per-asset detail, and a Form 4562 workpaper whose
+  tie-outs run against the ledger (a purchase never classified to 1600 shows up red).
+- **Accountable-plan reimbursements** — §4.8 end to end: documented submissions
+  (home-office square-footage computation built in), approval posts 504x-or-5030 / 2190,
+  and the reimbursement-tagged owner payment clears 2190 and marks submissions paid.
 - **Owner projection** — safe-harbor targets and the December over-withholding
   recommendation with residual-to-1040-ES split, assumptions declared on every result.
 - **Compliance calendar** — data-driven rules, verified-holiday rollover, filing
@@ -70,7 +79,7 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   payroll/table verification, calendar, year-end & package, time & comp, records,
   settings (period locks gated on reconciliation).
 
-174 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
+195 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
 ported invariant probes and seeded property tests (random balanced entries always accepted;
 every off-by-a-cent mutation, locked-period insert, and history edit rejected by the DB).
 Tax-rate-bearing engines are tested against synthetic verified tables — no real rate is
@@ -78,7 +87,7 @@ invented anywhere; real 2027 values load through the owner-verification gate whe
 
 ## Still ahead (per brief §7)
 
-Plaid sync (production application starts Phase 1) · fixed-asset register + Form 4562 with
-per-year MACRS tables · Pub 15-T/NYS-50-T 2027 tables + the hand-derived December golden
-fixture · email-forward vault inbox · pay stubs · CT-3-S/GCT per-year real tables · vault
-year-export zip.
+Plaid sync (production application starts Phase 1) · disposal accounting (§1245 recapture —
+disposals currently stop depreciation and route to the CPA) · Pub 15-T/NYS-50-T 2027 tables
++ the hand-derived December golden fixture · email-forward vault inbox · pay stubs ·
+CT-3-S/GCT per-year real tables · vault year-export zip.

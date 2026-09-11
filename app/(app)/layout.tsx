@@ -15,6 +15,7 @@ const NAV: Array<{ sec: string; items: Array<[string, string]> }> = [
       ["/reports/pnl", "P&L"],
       ["/reports/balance-sheet", "Balance sheet"],
       ["/reports/register", "Register"],
+      ["/assets", "Fixed assets"],
       ["/reconcile", "Reconciliation"],
     ],
   },

@@ -1,0 +1,12 @@
+{
+  "kind": "depreciation",
+  "source_url": "IRS annual inflation-adjustment Rev. Proc. (§179 limit and phase-out threshold for 2027) and §168(k) as in effect for 2027 property (bonus percentage)",
+  "effective_from": "2027-01-01",
+  "effective_to": "2027-12-31",
+  "payload": {
+    "_instructions": "PLACEHOLDER: fill every null from the cited official sources, then verify in-app. Verification refuses nulls. bonus_pct is a rate string like \"40%\" — check the §168(k) phase-down/legislation in effect for 2027 placements; do NOT guess.",
+    "section179_limit_cents": null,
+    "section179_phaseout_start_cents": null,
+    "bonus_pct": null
+  }
+}
