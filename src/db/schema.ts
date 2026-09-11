@@ -577,6 +577,26 @@ export const corporateRecords = pgTable("corporate_records", {
 });
 
 // ---------------------------------------------------------------------------
+// Shareholder stock basis — Form 7203 (0013)
+// ---------------------------------------------------------------------------
+export const shareholderBasisYears = pgTable("shareholder_basis_years", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  taxYear: smallint("tax_year").notNull().unique(),
+  beginningBasis: cents("beginning_basis").notNull(),
+  contributions: cents("contributions").notNull().default(0n),
+  incomeItems: cents("income_items").notNull().default(0n),
+  taxExemptIncome: cents("tax_exempt_income").notNull().default(0n),
+  distributionsApplied: cents("distributions_applied").notNull().default(0n),
+  excessDistributions: cents("excess_distributions").notNull().default(0n),
+  nondeductiblesApplied: cents("nondeductibles_applied").notNull().default(0n),
+  lossesAllowed: cents("losses_allowed").notNull().default(0n),
+  suspendedLosses: cents("suspended_losses").notNull().default(0n),
+  endingBasis: cents("ending_basis").notNull(),
+  trace: jsonb("trace").$type<Record<string, unknown>>().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Review packages (0012)
 // ---------------------------------------------------------------------------
 export const reviewPackages = pgTable("review_packages", {
