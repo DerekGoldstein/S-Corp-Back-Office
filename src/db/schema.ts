@@ -577,6 +577,22 @@ export const corporateRecords = pgTable("corporate_records", {
 });
 
 // ---------------------------------------------------------------------------
+// Review packages (0012)
+// ---------------------------------------------------------------------------
+export const reviewPackages = pgTable("review_packages", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  taxYear: smallint("tax_year").notNull(),
+  version: integer("version").notNull(),
+  status: text("status").notNull().default("draft"),
+  tieOuts: jsonb("tie_outs").$type<Record<string, unknown>[]>().notNull(),
+  openItems: jsonb("open_items").$type<Record<string, unknown>[]>().notNull().default([]),
+  coverDocumentId: bigint("cover_document_id", { mode: "bigint" }).references(() => documents.id),
+  cpaComments: text("cpa_comments"),
+  signedOffAt: timestamp("signed_off_at", { withTimezone: true }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Workpapers (0011)
 // ---------------------------------------------------------------------------
 export const workpapers = pgTable("workpapers", {
