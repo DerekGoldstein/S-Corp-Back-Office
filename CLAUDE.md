@@ -72,6 +72,12 @@ and no module keeps parallel totals.
   re-verified — never "fix" a golden test by regenerating it without re-deriving by hand.
 - **Secrets** live in `.env` (gitignored). SSN and Plaid access tokens are encrypted at rest
   via `src/lib/crypto.ts` (AES-256-GCM, key in `APP_ENCRYPTION_KEY`). Never log them.
+- **Never read a secret via dotted `process.env.X` in app/middleware code** — the bundler
+  inlines those at build time, freezing the value in `.next` (a password change or secret
+  rotation silently requires a rebuild). Use indexed access (`process.env["X"]`). And `.env`
+  values are written single-quoted with no `$` in any format we mint, because dotenv-style
+  loaders variable-expand `$N` sequences (this mangled a `$`-separated scrypt hash once;
+  see tests/lib/auth.test.ts).
 - Book = tax wherever possible (cash basis, tax depreciation) so Schedule M-1 stays near zero.
 - Plain, boring UI: server components + form posts; correctness and auditability over polish.
 
