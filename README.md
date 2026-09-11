@@ -10,6 +10,7 @@ classification queue, one annual payroll run, K-1 ingestion, entity tax workpape
 - [`docs/proposal/`](docs/proposal/) — approved data model, chart of accounts with tax
   mappings, DB-enforced invariants, flows, Phase 1 plan, open questions.
 - [`CLAUDE.md`](CLAUDE.md) — standing guardrails and owner decisions.
+- [`docs/OWNER-GUIDE.md`](docs/OWNER-GUIDE.md) — a year in the app, screen by screen.
 
 ## Quickstart
 
