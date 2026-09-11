@@ -477,6 +477,23 @@ export const reimbursementSubmissions = pgTable("reimbursement_submissions", {
 });
 
 // ---------------------------------------------------------------------------
+// Tax tables (0007)
+// ---------------------------------------------------------------------------
+export const taxTableVersions = pgTable("tax_table_versions", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  taxYear: smallint("tax_year").notNull(),
+  kind: text("kind").notNull(),
+  sourceUrl: text("source_url").notNull(),
+  effectiveFrom: date("effective_from", { mode: "string" }),
+  effectiveTo: date("effective_to", { mode: "string" }),
+  payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+  sha256: text("sha256").notNull(),
+  verifiedByOwner: boolean("verified_by_owner").notNull().default(false),
+  verifiedAt: timestamp("verified_at", { withTimezone: true }),
+  loadedAt: timestamp("loaded_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Corporate records (0006)
 // ---------------------------------------------------------------------------
 export const corporateRecordKindEnum = pgEnum("corporate_record_kind", [

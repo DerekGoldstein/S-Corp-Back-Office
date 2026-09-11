@@ -1,0 +1,14 @@
+{
+  "kind": "fica",
+  "source_url": "https://www.ssa.gov/oact/cola/ and IRS Pub 15 (2027 edition)",
+  "effective_from": "2027-01-01",
+  "effective_to": "2027-12-31",
+  "payload": {
+    "_instructions": "PLACEHOLDER: fill every null from the 2027 SSA COLA fact sheet and Pub 15, then verify in-app. Verification refuses nulls.",
+    "social_security_rate": null,
+    "social_security_wage_base_cents": null,
+    "medicare_rate": null,
+    "additional_medicare_rate": null,
+    "additional_medicare_threshold_cents": null
+  }
+}

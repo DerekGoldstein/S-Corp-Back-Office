@@ -177,7 +177,9 @@ export function runTargetGuards(draft: DraftEntry, accts: Map<string, Account>):
         "dimension",
       );
     }
-    if (a.requiresDocument) {
+    if (a.requiresDocument && draft.sourceModule !== "close") {
+      // documents substantiate the original spend; internal close reclasses
+      // (e.g. the meals 50% move to 5900) don't need a receipt
       const threshold = a.documentThreshold;
       const applies = threshold === null || lineAmount(l) >= threshold;
       if (applies && (draft.documentIds === undefined || draft.documentIds.length === 0)) {

@@ -1,0 +1,14 @@
+{
+  "kind": "limits_401k",
+  "source_url": "IRS COLA notice for 2027 (e.g. the annual Notice: 401(k) limits)",
+  "effective_from": "2027-01-01",
+  "effective_to": "2027-12-31",
+  "payload": {
+    "_instructions": "PLACEHOLDER: fill from the IRS 2027 COLA notice; employer_pct_of_comp comes from the plan document's compensation definition (open question #6).",
+    "elective_deferral_limit_cents": null,
+    "catch_up_50_limit_cents": null,
+    "annual_additions_415c_limit_cents": null,
+    "compensation_cap_cents": null,
+    "employer_pct_of_comp": null
+  }
+}

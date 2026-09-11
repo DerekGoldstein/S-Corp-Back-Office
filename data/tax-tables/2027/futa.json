@@ -1,0 +1,13 @@
+{
+  "kind": "futa",
+  "source_url": "IRS Form 940 instructions (2027) + DOL credit-reduction state list",
+  "effective_from": "2027-01-01",
+  "effective_to": "2027-12-31",
+  "payload": {
+    "_instructions": "PLACEHOLDER: check NY's credit-reduction status annually (brief §4.4).",
+    "futa_rate": null,
+    "futa_wage_base_cents": null,
+    "ny_credit_reduction_rate": null,
+    "deposit_threshold_cents": null
+  }
+}
