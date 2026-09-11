@@ -1,0 +1,124 @@
+{
+  "$comment": "§5 compliance calendar rules — data, never code. Dates here are the brief's illustrative schedule; each year-start the owner re-verifies against current-year official instructions (the year's form_captions/holidays tables carry the authority). due.type: fixed {month,day,taxYearOffset?} · multi_fixed {dates:[[m,d,label,yearOffset?],…]} · anniversary_month {month, everyNYears, baseYear} · event {event} (generated when the event exists, e.g. an actual pay run). All due dates roll forward past weekends and verified holidays.",
+  "rules": [
+    {
+      "slug": "payroll_annual_filings",
+      "name": "Form 941 (Q4), Form 940, W-2 to employee + W-2/W-3 to SSA, NYS-45 (Q4), any 1099-NEC",
+      "due": { "type": "fixed", "month": 1, "day": 31, "taxYearOffset": -1 },
+      "channel": "IRS e-file product / SSA BSO / NY Online Services",
+      "amount_source": "payroll_register",
+      "applies_from_year": 2028,
+      "notes": "For the prior tax year's December payroll. Seasonal-employer box keeps zero-wage quarters unfiled federally; NYS-45 files all four quarters."
+    },
+    {
+      "slug": "nys45_zero_quarters",
+      "name": "NYS-45 zero-wage quarterly returns (Q1–Q3)",
+      "due": { "type": "multi_fixed", "dates": [[4, 30, "Q1"], [7, 31, "Q2"], [10, 31, "Q3"]] },
+      "channel": "NY Online Services",
+      "amount_source": "manual",
+      "applies_from_year": 2028,
+      "notes": "Zero-wage quarters still file in NY."
+    },
+    {
+      "slug": "entity_returns",
+      "name": "Form 1120-S + K-1 (or 7004 extension); CT-3-S; NYC GCT return; PTET annual return if elected",
+      "due": { "type": "fixed", "month": 3, "day": 15, "taxYearOffset": -1 },
+      "channel": "e-file product / NY Online Services / NYC",
+      "amount_source": "workpapers",
+      "applies_from_year": 2028,
+      "notes": "Confirm the GCT due date each year in the NYC-4S instructions."
+    },
+    {
+      "slug": "employer_401k_contribution",
+      "name": "Employer 401(k) contribution for the prior year (deadline moves with a filed extension)",
+      "due": { "type": "fixed", "month": 3, "day": 15, "taxYearOffset": -1 },
+      "channel": "401(k) provider",
+      "amount_source": "ledger:2180",
+      "applies_from_year": 2028
+    },
+    {
+      "slug": "ptet_estimates",
+      "name": "NYS (and NYC if elected) PTET estimated payments",
+      "due": { "type": "multi_fixed", "dates": [[3, 15, "Q1"], [6, 15, "Q2"], [9, 15, "Q3"], [12, 15, "Q4"]] },
+      "channel": "NY Online Services",
+      "amount_source": "ledger:2210",
+      "condition_key": "ptet_elected",
+      "applies_from_year": 2027
+    },
+    {
+      "slug": "ptet_election",
+      "name": "NYS PTET election deadline (and NYC PTET) — decide with the CPA",
+      "due": { "type": "fixed", "month": 3, "day": 15 },
+      "channel": "NY Online Services",
+      "amount_source": "manual",
+      "applies_from_year": 2027
+    },
+    {
+      "slug": "owner_estimates",
+      "name": "Owner 1040-ES and IT-2105 estimated payments",
+      "due": { "type": "multi_fixed", "dates": [[4, 15, "Q1"], [6, 15, "Q2"], [9, 15, "Q3"], [1, 15, "Q4", 1]] },
+      "channel": "IRS Direct Pay / NY Online Services",
+      "amount_source": "projection",
+      "applies_from_year": 2027,
+      "notes": "December withholding is treated as paid evenly through the year; the projection module says how much residual ES remains."
+    },
+    {
+      "slug": "december_payroll_prep",
+      "name": "Before the December pay date: 401(k) deferral election on file; comp methodology + wage signed off; accountable-plan batch approved",
+      "due": { "type": "fixed", "month": 12, "day": 15 },
+      "channel": "internal",
+      "amount_source": "comp_computation",
+      "applies_from_year": 2027
+    },
+    {
+      "slug": "preyear_consent",
+      "name": "Pre-year written consent (§4.9): comp methodology, accountable plan, 401(k) election, de minimis election",
+      "due": { "type": "fixed", "month": 12, "day": 31 },
+      "channel": "internal",
+      "amount_source": "manual",
+      "applies_from_year": 2026
+    },
+    {
+      "slug": "biennial_statement",
+      "name": "NY LLC biennial statement (formation anniversary month)",
+      "due": { "type": "anniversary_month", "month": 8, "everyNYears": 2, "baseYear": 2024 },
+      "channel": "NY DOS online",
+      "amount_source": "manual",
+      "applies_from_year": 2026
+    },
+    {
+      "slug": "form_5500ez",
+      "name": "Form 5500-EZ (solo 401(k) assets over the filing threshold)",
+      "due": { "type": "fixed", "month": 7, "day": 31, "taxYearOffset": -1 },
+      "channel": "IRS EFAST2",
+      "amount_source": "manual",
+      "condition_key": "solo401k_over_threshold",
+      "applies_from_year": 2028
+    },
+    {
+      "slug": "eftps_after_december_run",
+      "name": "EFTPS federal deposit after the December pay run (monthly rule, or next business day if the $100k rule trips)",
+      "due": { "type": "event", "event": "december_pay_run" },
+      "channel": "EFTPS",
+      "amount_source": "payroll_deposit",
+      "applies_from_year": 2027,
+      "notes": "Generated from the actual posted pay run's deposit schedule (Phase 3)."
+    },
+    {
+      "slug": "nys1_after_december_run",
+      "name": "NYS-1 within 5 business days of the pay date (3 if prior-year withholding ≥ $15k)",
+      "due": { "type": "event", "event": "december_pay_run" },
+      "channel": "NY Online Services",
+      "amount_source": "payroll_deposit",
+      "applies_from_year": 2027
+    },
+    {
+      "slug": "new_hire_report",
+      "name": "NY new-hire report within 20 days of the owner's first pay date",
+      "due": { "type": "event", "event": "first_pay_date" },
+      "channel": "NY New Hire Online",
+      "amount_source": "manual",
+      "applies_from_year": 2027
+    }
+  ]
+}

@@ -577,6 +577,40 @@ export const corporateRecords = pgTable("corporate_records", {
 });
 
 // ---------------------------------------------------------------------------
+// Compliance calendar (0009)
+// ---------------------------------------------------------------------------
+export const calendarRules = pgTable("calendar_rules", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  slug: text("slug").notNull().unique(),
+  name: text("name").notNull(),
+  due: jsonb("due").$type<Record<string, unknown>>().notNull(),
+  channel: text("channel"),
+  amountSource: text("amount_source"),
+  conditionKey: text("condition_key"),
+  appliesFromYear: smallint("applies_from_year"),
+  appliesToYear: smallint("applies_to_year"),
+  notes: text("notes"),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const calendarItems = pgTable("calendar_items", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  ruleId: integer("rule_id")
+    .notNull()
+    .references(() => calendarRules.id),
+  calendarYear: smallint("calendar_year").notNull(),
+  seq: smallint("seq").notNull().default(1),
+  label: text("label").notNull(),
+  dueDate: date("due_date", { mode: "string" }).notNull(),
+  status: text("status").notNull().default("upcoming"),
+  completedAt: timestamp("completed_at", { withTimezone: true }),
+  documentId: bigint("document_id", { mode: "bigint" }).references(() => documents.id),
+  note: text("note"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Inferred row types
 // ---------------------------------------------------------------------------
 export type Account = typeof accounts.$inferSelect;
