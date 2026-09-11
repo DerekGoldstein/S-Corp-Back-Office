@@ -10,8 +10,11 @@ async function login(formData: FormData): Promise<void> {
   "use server";
   loadEnv();
   const password = formData.get("password");
-  const hash = process.env.OWNER_PASSWORD_HASH;
-  const secret = process.env.SESSION_SECRET;
+  // Indexed access on purpose: the bundler inlines dotted `process.env.X`
+  // reads into the build, which would freeze the hash at build time and make
+  // password changes silently ineffective until the next rebuild.
+  const hash = process.env["OWNER_PASSWORD_HASH"];
+  const secret = process.env["SESSION_SECRET"];
   if (!hash || !secret) {
     redirect("/login?setup=1");
   }
@@ -24,7 +27,7 @@ async function login(formData: FormData): Promise<void> {
     httpOnly: true,
     sameSite: "lax",
     path: "/",
-    secure: process.env.APP_SECURE_COOKIES === "1",
+    secure: process.env["APP_SECURE_COOKIES"] === "1",
     maxAge: 7 * 24 * 3600,
   });
   redirect("/");

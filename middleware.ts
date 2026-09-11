@@ -2,7 +2,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE, verifySessionToken } from "./src/lib/session";
 
 export async function middleware(request: NextRequest) {
-  const secret = process.env.SESSION_SECRET;
+  // Indexed access on purpose: dotted `process.env.X` is inlined at build
+  // time, which would freeze the secret in the bundle and break rotation.
+  const secret = process.env["SESSION_SECRET"];
   if (secret === undefined || secret === "") {
     // Not configured yet: allow only the login page, which explains setup.
     if (request.nextUrl.pathname === "/login") return NextResponse.next();

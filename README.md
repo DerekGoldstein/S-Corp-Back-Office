@@ -77,9 +77,10 @@ Nightly backup: `bash scripts/backup.sh` from cron (pg_dump + vault, AES-256 via
   zip (dependency-free store-mode writer) with the latest workpapers and every
   integrity-checked vault document belonging to the year.
 - **UI** — session-authenticated (scrypt + HMAC cookie) server-rendered screens:
-  dashboard, queue, import, journal, reports, reconciliation, rules, K-1 review,
-  payroll/table verification, calendar, year-end & package, time & comp, records,
-  settings (period locks gated on reconciliation).
+  dashboard, queue, import, journal, reports, fixed assets, reconciliation, rules,
+  K-1 review, payroll/table verification, reimbursements, calendar, year-end & package
+  (with the hand-off zip download), time & comp, records, settings (period locks gated
+  on reconciliation).
 
 198 tests run against a real Postgres per commit (`.github/workflows/ci.yml`), including
 ported invariant probes and seeded property tests (random balanced entries always accepted;
@@ -92,4 +93,4 @@ invented anywhere; real 2027 values load through the owner-verification gate whe
 Plaid sync (production application starts Phase 1) · disposal accounting (§1245 recapture —
 disposals currently stop depreciation and route to the CPA) · Pub 15-T/NYS-50-T 2027 tables
 + the hand-derived December golden fixture · email-forward vault inbox · pay stubs ·
-CT-3-S/GCT per-year real tables · vault year-export zip.
+CT-3-S/GCT per-year real tables.

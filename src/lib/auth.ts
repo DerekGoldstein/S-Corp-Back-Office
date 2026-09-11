@@ -1,6 +1,13 @@
 /**
  * Password hashing (Node-only: scrypt). Session tokens live in session.ts,
  * which stays Edge-safe for the middleware.
+ *
+ * Format: `scrypt:N:r:p:salt:hash` — colon-separated ON PURPOSE. The classic
+ * `$`-separated form gets mangled by dotenv-style variable expansion
+ * (@next/env turns `...$16384$8$1$...` into `...6384...`), which froze
+ * logins until the value was quoted. Colons survive every env loader.
+ * Legacy `$` hashes still verify (values written before the change, loaded
+ * through a non-expanding path).
  */
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 
@@ -13,15 +20,17 @@ export function hashPassword(password: string): string {
   if (password.length < 10) throw new Error("password must be at least 10 characters");
   const salt = randomBytes(16);
   const hash = scryptSync(password, salt, KEYLEN, { N: SCRYPT_N, r: SCRYPT_R, p: SCRYPT_P });
-  return `scrypt$${SCRYPT_N}$${SCRYPT_R}$${SCRYPT_P}$${salt.toString("base64")}$${hash.toString("base64")}`;
+  return `scrypt:${SCRYPT_N}:${SCRYPT_R}:${SCRYPT_P}:${salt.toString("base64")}:${hash.toString("base64")}`;
 }
 
 export function verifyPassword(password: string, stored: string): boolean {
-  const parts = stored.split("$");
+  const sep = stored.startsWith("scrypt:") ? ":" : "$";
+  const parts = stored.split(sep);
   if (parts.length !== 6 || parts[0] !== "scrypt") return false;
   const [, nStr, rStr, pStr, saltB64, hashB64] = parts;
   const salt = Buffer.from(saltB64!, "base64");
   const expected = Buffer.from(hashB64!, "base64");
+  if (expected.length === 0) return false;
   const actual = scryptSync(password, salt, expected.length, {
     N: Number(nStr),
     r: Number(rStr),

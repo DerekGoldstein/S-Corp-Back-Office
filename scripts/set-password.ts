@@ -29,9 +29,11 @@ function upsert(key: string, value: string, onlyIfMissing = false): void {
   }
 }
 
-upsert("OWNER_PASSWORD_HASH", hash);
-upsert("SESSION_SECRET", randomBytes(32).toString("base64"), true);
-upsert("APP_ENCRYPTION_KEY", randomBytes(32).toString("base64"), true);
+// Single-quoted so dotenv-style loaders never variable-expand the values
+// (base64 can contain '+'/'='; the hash format avoids '$' for the same reason).
+upsert("OWNER_PASSWORD_HASH", `'${hash}'`);
+upsert("SESSION_SECRET", `'${randomBytes(32).toString("base64")}'`, true);
+upsert("APP_ENCRYPTION_KEY", `'${randomBytes(32).toString("base64")}'`, true);
 lines = lines.filter((l, i) => !(l === "" && i === lines.length - 1));
 writeFileSync(envPath, lines.join("\n") + "\n", { mode: 0o600 });
 console.log("password hash written to .env (SESSION_SECRET / APP_ENCRYPTION_KEY ensured)");
