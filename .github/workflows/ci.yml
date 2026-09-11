@@ -23,6 +23,9 @@ jobs:
       CI: "true"
       DATABASE_ADMIN_URL: postgresql://postgres@localhost:5432/postgres
       DATABASE_URL: postgresql://postgres@localhost:5432/scorp
+      # the runner's snap chromium hangs on headless printing; use the HTML
+      # fallback path in CI (PDF rendering is exercised in dev environments)
+      CHROMIUM_PATH: "none"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

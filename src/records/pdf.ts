@@ -10,6 +10,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 export function chromiumPath(): string | null {
+  // Explicit opt-out (CI runners ship a snap chromium that hangs headless):
+  // CHROMIUM_PATH=none forces the HTML fallback.
+  if (process.env.CHROMIUM_PATH === "none") return null;
   const candidates = [
     process.env.CHROMIUM_PATH,
     "/opt/pw-browsers/chromium",
