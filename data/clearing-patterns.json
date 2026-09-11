@@ -1,0 +1,30 @@
+{
+  "$comment": "§4.2 forced classifications: outgoing debits matching these description patterns must clear the named liability accounts, never an expense. Data, not code — edit patterns as the bank's actual descriptors appear; regexes are case-insensitive and matched against the normalized description.",
+  "patterns": [
+    {
+      "name": "EFTPS federal payroll deposit",
+      "regex": "EFTPS|IRS\\s*USATAXPYMT",
+      "allowedCodes": ["2100", "2110", "2120"]
+    },
+    {
+      "name": "NYS/NYC withholding payment (NYS-1)",
+      "regex": "NYS\\s*DTF\\s*WT|NYS\\s*TAX\\s*PAYMENT|NYS-1",
+      "allowedCodes": ["2130", "2140"]
+    },
+    {
+      "name": "NY SUI contribution (NYS-45)",
+      "regex": "NYS\\s*DOL|NY\\s*UI|UNEMPLOYMENT\\s*INS",
+      "allowedCodes": ["2160"]
+    },
+    {
+      "name": "401(k) provider remittance",
+      "regex": "401\\s*K|GUIDELINE|EMPLOYEE\\s*FIDUCIARY|SOLO\\s*401",
+      "allowedCodes": ["2170", "2180"]
+    },
+    {
+      "name": "NYC GCT / NYS franchise & PTET payment",
+      "regex": "NYC\\s*DEPT\\s*OF\\s*FIN|NYC\\s*GCT|NYS\\s*DTF\\s*CT|NYS\\s*DTF\\s*PTET",
+      "allowedCodes": ["2200", "2210"]
+    }
+  ]
+}
