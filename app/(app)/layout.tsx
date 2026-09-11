@@ -20,6 +20,15 @@ const NAV: Array<{ sec: string; items: Array<[string, string]> }> = [
   },
   { sec: "Automation", items: [["/rules", "Rules"]] },
   {
+    sec: "Tax & compliance",
+    items: [
+      ["/k1", "K-1s"],
+      ["/payroll", "Payroll"],
+      ["/calendar", "Calendar"],
+      ["/year-end", "Year-end & CPA package"],
+    ],
+  },
+  {
     sec: "Comp & records",
     items: [
       ["/time", "Time & comp"],

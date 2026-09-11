@@ -22,11 +22,13 @@
     "set-password": "tsx scripts/set-password.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.125.0",
     "drizzle-orm": "^0.44.2",
     "next": "^15.5.0",
     "pg": "^8.16.0",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "zod": "^4.6.2"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
