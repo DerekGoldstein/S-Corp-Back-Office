@@ -477,6 +477,30 @@ export const reimbursementSubmissions = pgTable("reimbursement_submissions", {
 });
 
 // ---------------------------------------------------------------------------
+// Corporate records (0006)
+// ---------------------------------------------------------------------------
+export const corporateRecordKindEnum = pgEnum("corporate_record_kind", [
+  "annual_consent",
+  "preyear_consent",
+  "accountable_plan_policy",
+  "de_minimis_election",
+  "standing",
+]);
+
+export const corporateRecords = pgTable("corporate_records", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  kind: corporateRecordKindEnum("kind").notNull(),
+  standingKind: text("standing_kind"),
+  taxYear: smallint("tax_year"),
+  title: text("title").notNull(),
+  data: jsonb("data"),
+  documentId: bigint("document_id", { mode: "bigint" }).references(() => documents.id),
+  status: text("status").notNull().default("generated"),
+  signedOn: date("signed_on", { mode: "string" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Inferred row types
 // ---------------------------------------------------------------------------
 export type Account = typeof accounts.$inferSelect;
