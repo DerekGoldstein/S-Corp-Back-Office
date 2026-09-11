@@ -311,24 +311,31 @@ async function equityBalanceAsOf(db: Dbx, code: string, date: string): Promise<C
   return r.rows[0]?.balance ?? 0n;
 }
 
-/** Persist a draft version (next version number for the kind/year). */
+/** Persist a draft version (next version number for the kind/year/quarter). */
 export async function saveWorkpaper(
   db: Dbx,
   kind: string,
   taxYear: number,
   payload: unknown,
   tieOuts: unknown,
+  quarter: number | null = null,
 ): Promise<{ id: bigint; version: number }> {
   const toJson = (v: unknown) =>
     JSON.parse(JSON.stringify(v, (_k, x) => (typeof x === "bigint" ? x.toString() : x)));
   const existing = await db
     .select({ version: workpapers.version })
     .from(workpapers)
-    .where(and(eq(workpapers.kind, kind), eq(workpapers.taxYear, taxYear), isNull(workpapers.quarter)));
+    .where(
+      and(
+        eq(workpapers.kind, kind),
+        eq(workpapers.taxYear, taxYear),
+        quarter === null ? isNull(workpapers.quarter) : eq(workpapers.quarter, quarter),
+      ),
+    );
   const version = existing.reduce((a, r) => Math.max(a, r.version), 0) + 1;
   const [row] = await db
     .insert(workpapers)
-    .values({ kind, taxYear, version, payload: toJson(payload), tieOuts: toJson(tieOuts) })
+    .values({ kind, taxYear, quarter, version, payload: toJson(payload), tieOuts: toJson(tieOuts) })
     .returning({ id: workpapers.id });
   return { id: row!.id, version };
 }
