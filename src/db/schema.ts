@@ -577,6 +577,60 @@ export const corporateRecords = pgTable("corporate_records", {
 });
 
 // ---------------------------------------------------------------------------
+// Payroll runs (0010)
+// ---------------------------------------------------------------------------
+export const payrollRuns = pgTable("payroll_runs", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  taxYear: smallint("tax_year").notNull(),
+  payDate: date("pay_date", { mode: "string" }).notNull(),
+  status: text("status").notNull().default("posted"),
+  grossWages: cents("gross_wages").notNull(),
+  grossSource: text("gross_source").notNull(),
+  healthPremium: cents("health_premium").notNull().default(0n),
+  fitWages: cents("fit_wages").notNull(),
+  nysWages: cents("nys_wages").notNull(),
+  nycWages: cents("nyc_wages").notNull(),
+  ficaWages: cents("fica_wages").notNull(),
+  futaWages: cents("futa_wages").notNull(),
+  suiWages: cents("sui_wages").notNull(),
+  eeDeferral401k: cents("ee_deferral_401k").notNull(),
+  eeSocialSecurity: cents("ee_social_security").notNull(),
+  eeMedicare: cents("ee_medicare").notNull(),
+  eeAddlMedicare: cents("ee_addl_medicare").notNull(),
+  fitWithheld: cents("fit_withheld").notNull(),
+  nysWithheld: cents("nys_withheld").notNull(),
+  nycWithheld: cents("nyc_withheld").notNull(),
+  erSocialSecurity: cents("er_social_security").notNull(),
+  erMedicare: cents("er_medicare").notNull(),
+  erFuta: cents("er_futa").notNull(),
+  erSui: cents("er_sui").notNull(),
+  er401k: cents("er_401k").notNull(),
+  netPay: cents("net_pay").notNull(),
+  tableVersionIds: jsonb("table_version_ids").$type<Record<string, number>>().notNull(),
+  trace: jsonb("trace").notNull(),
+  warnings: jsonb("warnings").$type<string[] | null>(),
+  journalEntryId: bigint("journal_entry_id", { mode: "bigint" }).references(
+    () => journalEntries.id,
+  ),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+export const payrollDeposits = pgTable("payroll_deposits", {
+  id: bigint("id", { mode: "bigint" }).primaryKey().generatedAlwaysAsIdentity(),
+  payrollRunId: bigint("payroll_run_id", { mode: "bigint" })
+    .notNull()
+    .references(() => payrollRuns.id),
+  authority: text("authority").notNull(),
+  amount: cents("amount").notNull(),
+  dueDate: date("due_date", { mode: "string" }).notNull(),
+  rule: text("rule").notNull(),
+  liabilityAccounts: text("liability_accounts").array().notNull(),
+  status: text("status").notNull().default("scheduled"),
+  bankTransactionId: bigint("bank_transaction_id", { mode: "bigint" }),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+// ---------------------------------------------------------------------------
 // Compliance calendar (0009)
 // ---------------------------------------------------------------------------
 export const calendarRules = pgTable("calendar_rules", {
