@@ -24,6 +24,7 @@ const NAV: Array<{ sec: string; items: Array<[string, string]> }> = [
     items: [
       ["/k1", "K-1s"],
       ["/payroll", "Payroll"],
+      ["/reimbursements", "Reimbursements"],
       ["/calendar", "Calendar"],
       ["/year-end", "Year-end & CPA package"],
     ],

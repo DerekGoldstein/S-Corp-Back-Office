@@ -235,6 +235,10 @@ export async function classifyTransaction(
         proposal: null,
       })
       .where(eq(bankTransactions.id, txnId));
+    if (decision.ownerPaymentTag === "reimbursement") {
+      const { markSubmissionsPaid } = await import("../plan/reimbursements");
+      await markSubmissionsPaid(tx, txnId, absAmount);
+    }
     if (decision.ruleId !== undefined) {
       await tx
         .update(classificationRules)
