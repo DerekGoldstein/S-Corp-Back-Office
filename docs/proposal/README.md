@@ -1,7 +1,11 @@
-# Phase 0 proposal — awaiting owner approval
+# Phase 0 proposal — APPROVED 2026-09-11, build in progress
 
-This folder is the first deliverable required by `PROJECT_BRIEF.md` §0 and §10. **No application
-code has been written.** Per the brief, code starts only after the owner approves this model.
+This folder was the first deliverable required by `PROJECT_BRIEF.md` §0 and §10. The owner
+approved the model (including the `tax_treatment` enum extension and the automated meals
+reclass) on 2026-09-11 and set a standing rule now recorded in `CLAUDE.md`: embed correct
+logic over manual calculations, always, without re-asking. Phase 1 build proceeds on the
+recommended defaults; the unanswered items in `06-open-questions.md` remain open as
+**configuration** to fill in, not blockers.
 
 | File | Contents |
 |---|---|
